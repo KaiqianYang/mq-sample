@@ -1,30 +1,29 @@
 package com.example.messagingrabbitmq;
-
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
-import org.springframework.amqp.core.Message;
+import com.azure.spring.messaging.servicebus.core.ServiceBusTemplate;
 import org.springframework.amqp.core.MessageProperties;
+import org.springframework.messaging.support.MessageBuilder;
+import com.azure.spring.messaging.implementation.annotation.EnableAzureMessaging;
 
 @Component
 public class Producer {
 
-    private final RabbitTemplate rabbitTemplate;
+    private final ServiceBusTemplate serviceBusTemplate;
 
-    public Producer(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
+    public Producer(ServiceBusTemplate serviceBusTemplate) {
+        this.serviceBusTemplate = serviceBusTemplate;
     }
 
     public void run()  {
         for (int i = 0; i < 10; i++) {
             System.out.println("Sending message..."+i);
             String responseString = "test "+i;
-            MessageProperties properties = new MessageProperties();
-            properties.setContentType(MessageProperties.CONTENT_TYPE_JSON);
-            Message responseMessage = new Message(responseString.getBytes(), properties);
+            Message<String> responseMessage = MessageBuilder.withPayload(responseString).build();
             if (i % 2 == 0) {
-                rabbitTemplate.convertAndSend(MessagingRabbitmqApplication.queueName2, responseMessage);
+                serviceBusTemplate.send(MessagingRabbitmqApplication.queueName2, responseMessage);
             } else {
-                rabbitTemplate.convertAndSend(MessagingRabbitmqApplication.queueName1, responseMessage);
+                serviceBusTemplate.send(MessagingRabbitmqApplication.queueName1, responseMessage);
             }
         }
     }
