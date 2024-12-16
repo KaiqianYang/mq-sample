@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @EnableAzureMessaging
 @Component
 @Slf4j
-public class ServicebusQueueListener {
+public class RabbitQueueListener {
 
     /**
      * Kafka Listener to consume all the VIN list from MassRollout Kafka Topic
