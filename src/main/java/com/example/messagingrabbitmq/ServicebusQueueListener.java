@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @EnableAzureMessaging
 @Component
 @Slf4j
-public class MassRolloutRabbitQueueListener {
+public class ServicebusQueueListener {
 
     /**
      * Kafka Listener to consume all the VIN list from MassRollout Kafka Topic
@@ -16,12 +16,12 @@ public class MassRolloutRabbitQueueListener {
      * @param message
      */
     @ServiceBusListener(destination = MessagingRabbitmqApplication.queueName1)
-    public void listenMassRolloutEvent(String message) {
+    public void listenFrom1(String message) {
         System.out.println("Received from Listener <" + message + ">" + "FROM 1");
     }
 
     @ServiceBusListener(destination = MessagingRabbitmqApplication.queueName2)
-    public void listenMassRolloutEvent2(String message) {
+    public void listenFrom2(String message) {
         System.out.println("Received from Listener <" + message + ">" + "FROM 2");
     }
 
