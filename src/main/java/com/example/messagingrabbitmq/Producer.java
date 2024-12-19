@@ -1,16 +1,15 @@
 package com.example.messagingrabbitmq;
-
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
-import org.springframework.amqp.core.Message;
+import com.azure.spring.messaging.servicebus.core.ServiceBusTemplate;
 import org.springframework.amqp.core.MessageProperties;
 
 @Component
 public class Producer {
 
-    private final RabbitTemplate rabbitTemplate;
+    private final ServiceBusTemplate rabbitTemplate;
 
-    public Producer(RabbitTemplate rabbitTemplate) {
+    public Producer(ServiceBusTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
@@ -22,9 +21,9 @@ public class Producer {
             properties.setContentType(MessageProperties.CONTENT_TYPE_JSON);
             Message responseMessage = new Message(responseString.getBytes(), properties);
             if (i % 2 == 0) {
-                rabbitTemplate.convertAndSend(MessagingRabbitmqApplication.queueName2, responseMessage);
+                rabbitTemplate.send(MessagingRabbitmqApplication.queueName2, responseMessage);
             } else {
-                rabbitTemplate.convertAndSend(MessagingRabbitmqApplication.queueName1, responseMessage);
+                rabbitTemplate.send(MessagingRabbitmqApplication.queueName1, responseMessage);
             }
         }
     }
